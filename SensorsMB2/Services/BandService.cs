@@ -8,7 +8,9 @@ namespace SensorsMB2.Services
     public class BandService : IBandService
     {
         private IBandInfo Band { get; set; }
-        private IBandClient BandClient { get; set; }
+        private static IBandClient BandClient { get; set; }
+        //public static bool IsConnected => BandClient != null;
+
         public bool IsConnected => BandClient != null;
 
         public async Task FindBand()

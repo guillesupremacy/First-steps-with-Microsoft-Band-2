@@ -23,24 +23,31 @@
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="Acceleration X:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right"/>
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="Acceleration Y:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right"/>
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="Acceleration Z:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right"/>
+                    <TextBlock Foreground="White" Padding="0,0,15,0" Text="Milliseconds:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right"/>
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="               " FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="Ang.Velocity X:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right"/>
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="Ang.Velocity Y:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right"/>
                     <TextBlock Foreground="White" Padding="0,0,15,0" Text="Ang.Velocity Z:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right" />
+                    <TextBlock Foreground="White" Padding="0,0,15,0" Text="Milliseconds:" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Right" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Foreground="White" Text="{Binding SensorStream.Accelerometer.X}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" />
-                    <TextBlock Foreground="White" Text="{Binding SensorStream.Accelerometer.Y}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
-                    <TextBlock Foreground="White" Text="{Binding SensorStream.Accelerometer.Z}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding AccelerometerSensorStream.X}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" />
+                    <TextBlock Foreground="White" Text="{Binding AccelerometerSensorStream.Y}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding AccelerometerSensorStream.Z}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding AccelerometerSensorStream.Time}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
                     <TextBlock Foreground="White" Text="                                " FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left" />
-                    <TextBlock Foreground="White" Text="{Binding SensorStream.Gyroscope.X}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
-                    <TextBlock Foreground="White" Text="{Binding SensorStream.Gyroscope.Y}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
-                    <TextBlock Foreground="White" Text="{Binding SensorStream.Gyroscope.Z}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding GyroscopeSensorStream.X}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding GyroscopeSensorStream.Y}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding GyroscopeSensorStream.Z}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
+                    <TextBlock Foreground="White" Text="{Binding GyroscopeSensorStream.Time}" FontSize="32" FontWeight="Light" Style="{StaticResource BodyTextBlockStyle}" HorizontalAlignment="Left"/>
                 </StackPanel>
             </Grid>
         </StackPanel>
-
-        <Button Foreground="White" FontSize="40" Command="{Binding StartCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" FontFamily="Global User Interface">START</Button>
+        <StackPanel VerticalAlignment="Bottom">
+            <Button Foreground="White" FontSize="40" Command="{Binding StartCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" FontFamily="Global User Interface">START</Button>
+            <Button Foreground="White" FontSize="40" Command="{Binding StopCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" FontFamily="Global User Interface">STOP</Button>
+        </StackPanel>
+        
         <MediaElement Visibility="Collapsed"/>
     </Grid>
 </Page>

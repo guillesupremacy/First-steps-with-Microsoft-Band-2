@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SensorsMB2.Models.SensorStreamModel" BaseTypeListCollapsed="true">
+    <Position X="11" Y="6.75" Width="1.75" />
+    <NestedTypes>
+      <Enum Name="SensorsMB2.Models.SensorStreamModel.SupportedValues" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\SensorStreamModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAEAIAAQgAAAAIAAAAAAAgAAAAAAAAAAAABAAYQE=</HashCode>
+      <FileName>Models\SensorStreamModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SensorsMB2.Services.BandService" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAABAAAAAACAAABAAAAAAAAAAAQAAgAA=</HashCode>
+      <FileName>Services\BandService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SensorsMB2.Utilities.CustomCommand" BaseTypeListCollapsed="true">
+    <Position X="13" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAACAAQAAEAEAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\CustomCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SensorsMB2.ViewModels.SensorStreamViewModel" BaseTypeListCollapsed="true">
+    <Position X="13" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAQAABAgAAAIAAAAACBkBAABAAAAFAABQIBASA=</HashCode>
+      <FileName>ViewModels\SensorStreamViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

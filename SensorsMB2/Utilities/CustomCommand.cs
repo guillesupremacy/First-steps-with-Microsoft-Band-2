@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace SensorsMB2.Utility
+namespace SensorsMB2.Utilities
 {
-    class CustomCommand :ICommand
+    public class CustomCommand :ICommand
     {
         private Action<object> execute { get; set; }
         private Predicate<object> canExecute { get; set; }
@@ -15,7 +15,8 @@ namespace SensorsMB2.Utility
         }
         public bool CanExecute(object parameter)
         {
-            return true;
+            bool b = canExecute?.Invoke(parameter) ?? true;
+            return b;
         }
 
         public void Execute(object parameter)
@@ -28,10 +29,7 @@ namespace SensorsMB2.Utility
         public void RaiseCanExecuteChanged()
         {
             var handler = CanExecuteChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
     }
