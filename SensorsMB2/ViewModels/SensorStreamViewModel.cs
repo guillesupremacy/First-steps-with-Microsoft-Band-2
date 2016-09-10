@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -15,15 +14,13 @@ using SensorsMB2.Utilities;
 
 namespace SensorsMB2.ViewModels
 {
-    [DataContract]
     public class SensorStreamViewModel : INotifyPropertyChanged
     {
         private SensorStreamModel _accelerometerSensorStream;
         private SensorStreamModel _gyroscopeSensorStream;
 
-        [DataMember] public Collection<SensorStreamModel> AccelerometerSensorStreamCollection;
-
-        [DataMember] public Collection<SensorStreamModel> GyroscopeSensorStreamCollection;
+        public Collection<SensorStreamModel> AccelerometerSensorStreamCollection;
+        public Collection<SensorStreamModel> GyroscopeSensorStreamCollection;
 
         public SensorStreamViewModel()
         {

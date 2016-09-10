@@ -47,7 +47,7 @@
             <Button Foreground="White" FontSize="40" Command="{Binding StartCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" FontFamily="Global User Interface">START</Button>
             <Button Foreground="White" FontSize="40" Command="{Binding StopCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" FontFamily="Global User Interface">STOP</Button>
         </StackPanel>
-        
+
         <MediaElement Visibility="Collapsed"/>
     </Grid>
 </Page>
