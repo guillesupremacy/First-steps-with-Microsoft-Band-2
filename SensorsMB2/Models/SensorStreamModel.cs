@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Windows.Storage;
 using Newtonsoft.Json;
-using SensorsMB2.Properties;
 
 namespace SensorsMB2.Models
 {
     [DataContract]
-    public class SensorStreamModel : INotifyPropertyChanged
+    public class SensorStreamModel
     {
         public enum SupportedValues
         {
@@ -19,77 +16,36 @@ namespace SensorsMB2.Models
             Low
         }
 
-        private long _time;
-        private double _x;
-        private double _y;
-        private double _z;
-
         public SensorStreamModel()
         {
         }
 
-        [DataMember]
-        public double X
+        public SensorStreamModel(double time, double x, double y, double z)
         {
-            get { return _x; }
-            set
-            {
-                if (value.Equals(_x)) return;
-                _x = value;
-                OnPropertyChanged();
-            }
+            Time = time;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         [DataMember]
-        public double Y
-        {
-            get { return _y; }
-            set
-            {
-                if (value.Equals(_y)) return;
-                _y = value;
-                OnPropertyChanged();
-            }
-        }
+        public double Time { get; set; }
 
         [DataMember]
-        public double Z
-        {
-            get { return _z; }
-            set
-            {
-                if (value.Equals(_z)) return;
-                _z = value;
-                OnPropertyChanged();
-            }
-        }
+        public double X { get; set; }
 
         [DataMember]
-        public long Time
-        {
-            get { return _time; }
-            set
-            {
-                if (value.Equals(_time)) return;
-                _time = value;
-                OnPropertyChanged();
-            }
-        }
+        public double Y { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        [DataMember]
+        public double Z { get; set; }
 
         public SensorStreamModel ShallowCopy()
         {
             return (SensorStreamModel) MemberwiseClone();
         }
 
-        public async void SerializeJsonToFile(Collection<SensorStreamModel> sensorStreamDataCollection, string fileName)
-        {
-            var file = await DownloadsFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
-            await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(sensorStreamDataCollection, Formatting.Indented));
-        }
-
-        public TimeSpan ReportingInterval(SupportedValues supportedValues)
+        public static TimeSpan ReportingInterval(SupportedValues supportedValues)
         {
             switch (supportedValues)
             {
@@ -104,10 +60,10 @@ namespace SensorsMB2.Models
             }
         }
 
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public static async void SerializeJsonToFile(Collection<SensorStreamModel> collection, string fileName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var file = await DownloadsFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
+            await FileIO.WriteTextAsync(file, JsonConvert.SerializeObject(collection, Formatting.Indented));
         }
     }
 }

@@ -3,19 +3,20 @@ using System.Windows.Input;
 
 namespace SensorsMB2.Utilities
 {
-    public class CustomCommand :ICommand
+    public class CustomCommand : ICommand
     {
-        private Action<object> execute { get; set; }
-        private Predicate<object> canExecute { get; set; }
-
         public CustomCommand(Action<object> execute, Predicate<object> canExecute)
         {
             this.execute = execute;
             this.canExecute = canExecute;
         }
+
+        private Action<object> execute { get; }
+        private Predicate<object> canExecute { get; }
+
         public bool CanExecute(object parameter)
         {
-            bool b = canExecute?.Invoke(parameter) ?? true;
+            var b = canExecute?.Invoke(parameter) ?? true;
             return b;
         }
 
@@ -31,6 +32,5 @@ namespace SensorsMB2.Utilities
             var handler = CanExecuteChanged;
             handler?.Invoke(this, EventArgs.Empty);
         }
-
     }
 }

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Microsoft.Band;
+using Microsoft.Band.Notifications;
 using Microsoft.Band.Sensors;
+using SensorsMB2.Annotations;
 using SensorsMB2.Models;
-using SensorsMB2.Properties;
 using SensorsMB2.Services;
 using SensorsMB2.Utilities;
 
@@ -16,8 +19,10 @@ namespace SensorsMB2.ViewModels
 {
     public class SensorStreamViewModel : INotifyPropertyChanged
     {
-        private SensorStreamModel _accelerometerSensorStream;
-        private SensorStreamModel _gyroscopeSensorStream;
+        private string _accelerometerSamples;
+        private string _countdown;
+        private string _gyroscopeSamples;
+        private string _statusMessage;
 
         public Collection<SensorStreamModel> AccelerometerSensorStreamCollection;
         public Collection<SensorStreamModel> GyroscopeSensorStreamCollection;
@@ -26,36 +31,9 @@ namespace SensorsMB2.ViewModels
         {
             GyroscopeSensorStreamCollection = new Collection<SensorStreamModel>();
             AccelerometerSensorStreamCollection = new Collection<SensorStreamModel>();
-            AccelerometerSensorStream = new SensorStreamModel();
-            GyroscopeSensorStream = new SensorStreamModel();
             StartCommand = new CustomCommand(StartCommand_Execute, StartCommand_CanExecute);
             StopCommand = new CustomCommand(StopCommand_Execute, StopCommand_CanExecute);
             ConnectToBand();
-        }
-
-        public SensorStreamModel GyroscopeSensorStream
-        {
-            get { return _gyroscopeSensorStream; }
-            set
-            {
-                if (value.Equals(_gyroscopeSensorStream))
-                {
-                    return;
-                }
-                _gyroscopeSensorStream = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public SensorStreamModel AccelerometerSensorStream
-        {
-            get { return _accelerometerSensorStream; }
-            set
-            {
-                if (Equals(value, _accelerometerSensorStream)) return;
-                _accelerometerSensorStream = value;
-                OnPropertyChanged();
-            }
         }
 
         public CustomCommand StartCommand { get; set; }
@@ -64,20 +42,72 @@ namespace SensorsMB2.ViewModels
         public IBandClient BandClient { get; set; }
         public bool IsGettingData { get; set; }
 
+        public string GyroscopeSamples
+        {
+            get { return _gyroscopeSamples; }
+            set
+            {
+                if (value == _gyroscopeSamples) return;
+                _gyroscopeSamples = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string AccelerometerSamples
+        {
+            get { return _accelerometerSamples; }
+            set
+            {
+                if (value == _accelerometerSamples) return;
+                _accelerometerSamples = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Countdown
+        {
+            get { return _countdown; }
+            set
+            {
+                if (value == _countdown) return;
+                _countdown = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            set
+            {
+                if (value == _statusMessage) return;
+                _statusMessage = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private async void ConnectToBand()
         {
-            BandService = new BandService();
-            BandClient = await BandService.InitTask();
+            try
+            {
+                BandService = new BandService();
+                BandClient = await BandService.InitTask();
 
-            BandClient.SensorManager.Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
-            BandClient.SensorManager.Accelerometer.ReportingInterval =
-                AccelerometerSensorStream.ReportingInterval(SensorStreamModel.SupportedValues.High);
+                BandClient.SensorManager.Accelerometer.ReadingChanged += Accelerometer_ReadingChanged;
+                BandClient.SensorManager.Accelerometer.ReportingInterval =
+                    SensorStreamModel.ReportingInterval(SensorStreamModel.SupportedValues.High);
 
-            BandClient.SensorManager.Gyroscope.ReadingChanged += Gyroscope_ReadingChanged;
-            BandClient.SensorManager.Gyroscope.ReportingInterval =
-                AccelerometerSensorStream.ReportingInterval(SensorStreamModel.SupportedValues.High);
+                BandClient.SensorManager.Gyroscope.ReadingChanged += Gyroscope_ReadingChanged;
+                BandClient.SensorManager.Gyroscope.ReportingInterval =
+                    SensorStreamModel.ReportingInterval(SensorStreamModel.SupportedValues.High);
+            }
+            catch (Exception e)
+            {
+                StatusMessage = e.Message;
+                Debug.WriteLine(e.Message);
+            }
 
             StartCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
@@ -98,10 +128,12 @@ namespace SensorsMB2.ViewModels
             StopCommand.RaiseCanExecuteChanged();
             StartCommand.RaiseCanExecuteChanged();
 
-            AccelerometerSensorStream.SerializeJsonToFile(AccelerometerSensorStreamCollection,
-                nameof(AccelerometerSensorStream) + ".json");
-            GyroscopeSensorStream.SerializeJsonToFile(GyroscopeSensorStreamCollection,
-                nameof(GyroscopeSensorStream) + ".json");
+            SensorStreamModel.SerializeJsonToFile(AccelerometerSensorStreamCollection,
+                "AccelerometerData.json");
+            SensorStreamModel.SerializeJsonToFile(GyroscopeSensorStreamCollection,
+                "GyroscopeData.json");
+
+            Countdown = "Done";
         }
 
         private bool StartCommand_CanExecute(object o)
@@ -111,25 +143,35 @@ namespace SensorsMB2.ViewModels
 
         private async void StartCommand_Execute(object o)
         {
+            Countdown = "3";
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            Countdown = "2";
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            Countdown = "1";
+
             await BandClient.SensorManager.Accelerometer.StartReadingsAsync(new CancellationToken());
             await BandClient.SensorManager.Gyroscope.StartReadingsAsync(new CancellationToken());
+
+            await BandClient.NotificationManager.VibrateAsync(VibrationType.OneToneHigh);
+            Countdown = "Go!";
 
             IsGettingData = true;
             StartCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
-            //await Task.Delay(TimeSpan.FromSeconds(5));
         }
 
         private async void Gyroscope_ReadingChanged(object sender, BandSensorReadingEventArgs<IBandGyroscopeReading> e)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                GyroscopeSensorStream.X = e.SensorReading.AngularVelocityX;
-                GyroscopeSensorStream.Y = e.SensorReading.AngularVelocityY;
-                GyroscopeSensorStream.Z = e.SensorReading.AngularVelocityZ;
-                GyroscopeSensorStream.Time = e.SensorReading.Timestamp.ToUnixTimeMilliseconds();
+                GyroscopeSensorStreamCollection.Add(
+                    new SensorStreamModel(
+                        e.SensorReading.Timestamp.ToUnixTimeMilliseconds(),
+                        e.SensorReading.AngularVelocityX,
+                        e.SensorReading.AngularVelocityY,
+                        e.SensorReading.AngularVelocityZ));
 
-                GyroscopeSensorStreamCollection.Add(GyroscopeSensorStream.ShallowCopy());
+                GyroscopeSamples = "Gyro_Data = " + GyroscopeSensorStreamCollection.Count;
             });
         }
 
@@ -138,12 +180,14 @@ namespace SensorsMB2.ViewModels
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                AccelerometerSensorStream.X = e.SensorReading.AccelerationX;
-                AccelerometerSensorStream.Y = e.SensorReading.AccelerationY;
-                AccelerometerSensorStream.Z = e.SensorReading.AccelerationZ;
-                AccelerometerSensorStream.Time = e.SensorReading.Timestamp.ToUnixTimeMilliseconds();
+                AccelerometerSensorStreamCollection.Add(
+                    new SensorStreamModel(
+                        e.SensorReading.Timestamp.ToUnixTimeMilliseconds(),
+                        e.SensorReading.AccelerationX,
+                        e.SensorReading.AccelerationY,
+                        e.SensorReading.AccelerationZ));
 
-                AccelerometerSensorStreamCollection.Add(AccelerometerSensorStream.ShallowCopy());
+                AccelerometerSamples = "Acce_Data = " + AccelerometerSensorStreamCollection.Count;
             });
         }
 
